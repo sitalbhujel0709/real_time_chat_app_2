@@ -5,7 +5,7 @@ const userRouter:Router = Router()
 
 userRouter.post('/register',UserController.createUser)
 userRouter.post('/login',UserController.loginUser)
-userRouter.get('/',requireAuth,UserController.getAllUsers)
+userRouter.get('/' ,UserController.getAllUsers)
 userRouter.get('/:id',requireAuth,UserController.getUserById)
 userRouter.get('/profile',requireAuth,UserController.getUserProfile)
 userRouter.put('/update',requireAuth,UserController.updateUser)
