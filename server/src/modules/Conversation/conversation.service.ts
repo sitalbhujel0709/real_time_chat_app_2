@@ -41,4 +41,16 @@ export class ConversationService {
     })
     return newConversation;
   }
+  static async getUserConversations(userId:number):Promise<Conversation[]>{
+    const conversations = await prisma.conversation.findMany({
+      where:{
+        Participant:{
+          some:{
+            userId:userId
+          }
+        }
+      }
+    })
+    return conversations;
+  }
 }

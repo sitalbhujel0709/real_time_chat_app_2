@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../config/axios';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
@@ -21,6 +22,7 @@ const SignUp = () => {
         setUsername('');
         setEmail('');
         setPassword('');
+        toast.success('Registration successful! Please log in.')
         navigate('/');
       }
 

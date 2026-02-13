@@ -1,5 +1,5 @@
 import React from "react";
-import { EllipsisVertical,Plus,ArrowBigRight} from "lucide-react";
+import { EllipsisVertical,Plus,SendHorizontal} from "lucide-react";
 
 const ChatWindow = () => {
   return (
@@ -26,7 +26,7 @@ const ChatWindow = () => {
           </span>
           <input type="text" className="text-md font-semibold text-emerald-600 flex-1 outline-none" />
           <span className="h-10 w-10 flex items-center justify-center rounded-full bg-emerald-600 cursor-pointer hover:bg-emerald-700">
-            <ArrowBigRight className="w-6 h-6 text-gray-300"/>
+            <SendHorizontal className="w-6 h-6 text-gray-300"/>
           </span>
         </div>
       </div>

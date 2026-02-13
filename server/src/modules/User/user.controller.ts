@@ -19,8 +19,8 @@ export class UserController {
       const {accessToken,...userWithoutPassword} = await UserService.LoginUser(email,password)
       res.cookie('accessToken',accessToken,{
         httpOnly: true,
-        secure:true,
-        sameSite:'none',
+        secure:false,
+        sameSite:'lax',
         maxAge: 60 * 60 * 1000 // 1 hour
       })
       res.status(200).json({ ...userWithoutPassword, accessToken });
@@ -51,12 +51,13 @@ export class UserController {
   static async getUserProfile(req:Request,res:Response):Promise<void | Response>{
     const userId = (req as any).user.id;
     try {
-      const user = await UserService.getUserProfile(userId);
+      const user = await UserService.getUserProfile(Number(userId));
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
       res.status(200).json(user);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' });
     }
   }

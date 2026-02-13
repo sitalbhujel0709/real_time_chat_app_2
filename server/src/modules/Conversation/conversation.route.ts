@@ -6,5 +6,6 @@ import { requireAuth } from "../../middleware/requireAuth";
 const conversationRouter:Router = Router();
 
 conversationRouter.post('/',requireAuth,conversationController.createConversation)
+conversationRouter.get('/',requireAuth,conversationController.getUsersConversations)
 
 export default conversationRouter;

@@ -54,7 +54,7 @@ const NewChatmodal = ({ onClose }) => {
                     .join("")}
                 </div>
                 <span className="text-emerald-600 font-semibold">
-                  {user.username}
+                  {user.name}
                 </span>
               </div>
               <span className="p-2 cursor-pointer hover:bg-emerald-100 transition-colors duration-300">

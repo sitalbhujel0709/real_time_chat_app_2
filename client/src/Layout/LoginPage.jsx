@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import api from '../config/axios';
 import { useAuth } from '../context/authContext';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +17,7 @@ const Login = () => {
       const response = await api.post('/users/login',{email,password});
       console.log(response.data);
       login({id:response.data.id,username:response.data.username});
+      toast.success('login successful')
       navigate('/chat');
     } catch (error) {
       console.error('Login failed:', error);
