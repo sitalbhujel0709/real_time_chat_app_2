@@ -6,30 +6,33 @@ import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/socket";
 
-const Leftbar = ({conversations}) => {
-  
+const Leftbar = ({ conversations }) => {
   const [activeChat, setActiveChat] = useState();
   const [newChatModalOpen, setNewChatModalOpen] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([])
-  const {user} = useAuth()
-  const {socket,isConnected} = useSocket()
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const { user,logout } = useAuth();
+  const { socket, isConnected } = useSocket();
   const navigate = useNavigate();
 
-  const options = ["New Group Chat", "Settings", "Logout"];
-  useEffect(()=>{
-    if(!socket) return;
-    socket.on('connectedUsers',(users)=>{
-      console.log('Online users:',users)
-      setOnlineUsers(users)
-    })
+  const options = [
+    {label:'New Groupchat',func:()=>{}},
+    {label:'Settings',func:()=>{}},
+    {label:'Logout',func:logout}
+  ];
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("connectedUsers", (users) => {
+      console.log("Online users:", users);
+      setOnlineUsers(users);
+    });
 
-    return ()=>{
-      socket.off('connectedUsers');
-    }
-  },[socket,isConnected])
-  function OpenConversation(id){
+    return () => {
+      socket.off("connectedUsers");
+    };
+  }, [socket, isConnected]);
+  function OpenConversation(id) {
     setActiveChat(id);
-    navigate(`/chat/${id}`)
+    navigate(`/chat/${id}`);
   }
   return (
     <div className="h-screen flex flex-col border-r border-gray-300 w-md px-4 relative">
@@ -46,13 +49,13 @@ const Leftbar = ({conversations}) => {
             >
               <MessageSquarePlus className="w-5 h-5 text-emerald-600 font-extrabold" />
             </span>
-              {
-                newChatModalOpen && (
-                  <NewChatmodal onClose={() => {setNewChatModalOpen(false)
-                    console.log("modal closed")
-                  }} />
-                )
-              }
+            {newChatModalOpen && (
+              <NewChatmodal
+                onClose={() => {
+                  setNewChatModalOpen(false);
+                }}
+              />
+            )}
             <Dropdown options={options} />
           </div>
         </header>
@@ -71,38 +74,44 @@ const Leftbar = ({conversations}) => {
       </div>
       {/* chat list */}
       <div className="space-y-1 mt-4 overflow-y-auto flex-1">
-        {conversations.map(({ id, name, lastMessage, lastMessagetime,Participant }) => {
-          return (
-            <div
-              key={id} 
-              className={
-                "h-16 p-2 flex items-center rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
-                (activeChat === id ? " bg-gray-200" : "")
-              }
-              onClick={()=>OpenConversation(id)}
-            >
-              <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex justify-center items-center font-semibold relative cursor-pointer">
-                {
-                  Participant.find((p)=>p.user.id !== user.id)?.user.name.split(" ").map((n)=>n[0]).join("")
+        {conversations.map(
+          ({ id, name, lastMessage, lastMessagetime, Participant }) => {
+            return (
+              <div
+                key={id}
+                className={
+                  "h-16 p-2 flex items-center rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
+                  (activeChat === id ? " bg-gray-200" : "")
                 }
-                <span className={`ml-auto absolute ${onlineUsers.includes(String(Participant.find(p=>p.user.id!==user.id)?.user.id)) ? 'bg-green-500' : 'bg-gray-400'} w-3 h-3 rounded-full self-start border border-gray-300 bottom-0 right-0`}>
-                
-              </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="ml-4 text-md font-semibold text-emerald-600 cursor-pointer">
-                  {name? name : Participant.find((p)=>p.user.id !== user.id)?.user.name}
+                onClick={() => OpenConversation(id)}
+              >
+                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex justify-center items-center font-semibold relative cursor-pointer">
+                  {Participant.find((p) => p.user.id !== user.id)
+                    ?.user.name.split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                  <span
+                    className={`ml-auto absolute ${onlineUsers.includes(String(Participant.find((p) => p.user.id !== user.id)?.user.id)) ? "bg-green-500" : "bg-gray-400"} w-3 h-3 rounded-full self-start border border-gray-300 bottom-0 right-0`}
+                  ></span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="ml-4 text-md font-semibold text-emerald-600 cursor-pointer">
+                    {name
+                      ? name
+                      : Participant.find((p) => p.user.id !== user.id)?.user
+                          .name}
+                  </span>
+                  <span className="ml-4 text-sm text-gray-500 ">
+                    {lastMessage}
+                  </span>
+                </div>
+                <span className="ml-4 text-sm text-gray-500">
+                  {lastMessagetime}
                 </span>
-                <span className="ml-4 text-sm text-gray-500 ">
-                  {lastMessage}
-                </span>
               </div>
-              <span className="ml-4 text-sm text-gray-500">
-                {lastMessagetime}
-              </span>
-            </div>
-          );
-        })}
+            );
+          },
+        )}
       </div>
     </div>
   );

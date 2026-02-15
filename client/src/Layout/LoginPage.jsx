@@ -20,6 +20,7 @@ const Login = () => {
       toast.success('login successful')
       navigate('/chat');
     } catch (error) {
+      toast.error(error.message || 'Login failed')
       console.error('Login failed:', error);
     }
   };

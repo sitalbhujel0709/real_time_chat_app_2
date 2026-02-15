@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { EllipsisVertical, Plus, SendHorizontal } from "lucide-react";
+import { CheckCheck, Plus, SendHorizontal } from "lucide-react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { useSocket } from "../context/socket";
 import api from "../config/axios";
+import Dropdown from "../components/Dropdown";
 
 const ChatWindow = () => {
   const { conversations } = useOutletContext();
@@ -82,16 +83,15 @@ const ChatWindow = () => {
           </h1>
         </div>
         <div className="flex items-center">
-          <span className="p-2 cursor-pointer hover:bg-emerald-100 transition-colors duration-300 rounded-full">
-            <EllipsisVertical className="w-5 h-5 text-emerald-600 font-bold" />
-          </span>
+          
+            <Dropdown options={[{label:'Delete',func:()=>{}}]} alignment={"right"}/>
         </div>
       </header>
       {/* Body */}
       <div className="h-[calc(100vh-64px)] overflow-y-auto bg-gray-50 p-4 relative">
         {/* Messages */}
         <div className="">
-          {messages.map(({ id, content, senderId, createdAt }) => {
+          {messages.map(({ id, content, senderId, createdAt,seen }) => {
             const isOwnMessage = senderId === user.id;
             return (
               <div
@@ -100,9 +100,15 @@ const ChatWindow = () => {
                   ${isOwnMessage ? "flex justify-end" : "flex justify-start"} px-12 mb-1
                 `}
               >
-                <div className={`inline-flex max-w-lg wrap-break-word px-4 py-2 rounded-lg ${isOwnMessage ? "bg-emerald-50 text-gray-800" : "bg-gray-200 text-gray-800"}`}>
+                <div className={`relative inline-flex max-w-lg wrap-break-word pl-4 pr-6 py-2 rounded-lg ${isOwnMessage ? "bg-emerald-50 text-gray-800" : "bg-gray-200 text-gray-800"}`}>
                   <p>{content}</p>
                   <span className="text-gray-400 text-xs mt-auto ml-1">{(new Date(createdAt)).toLocaleTimeString([],{hour: '2-digit',minute:"2-digit",})}</span>
+                  {
+                    isOwnMessage && <span className="absolute bottom-0 right-2">
+                    <CheckCheck className={`${seen ? "text-sky-400":"text-gray-400"} w-3 h-3`}/>
+                  </span>
+                  }
+                  
                 </div>
                 
               </div>

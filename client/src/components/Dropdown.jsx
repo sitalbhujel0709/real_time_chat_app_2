@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 
-const Dropdown = ({ options }) => {
+const Dropdown = ({ options , alignment }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -25,13 +25,14 @@ const Dropdown = ({ options }) => {
     >
       <EllipsisVertical className="w-5 h-5 text-emerald-600 font-bold" />
       {isOpen && (
-        <div className="absolute z-10 mt-2 max-h-60 w-40 overflow-auto rounded-lg bg-white p-1 text-sm shadow-lg">
+        <div className={`absolute z-10 mt-2 max-h-60 w-40 overflow-auto rounded-lg bg-white p-1 text-sm shadow-lg ${alignment === "right" ? "right-0" : "left-0"}`}>
           {options.map((option, index) => (
             <div
               key={index}
+              onClick={()=>{option.func?option.func():undefined}}
               className="cursor-pointer px-4 py-2 text-emerald-600 font-semibold hover:bg-emerald-50"
             >
-              {option}
+              {option.label}
             </div>
           ))}
         </div>

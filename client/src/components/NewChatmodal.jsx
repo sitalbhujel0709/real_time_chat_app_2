@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { EllipsisVertical, MoveLeft, Search } from "lucide-react";
 import api from "../config/axios";
+import { useAuth } from "../context/authContext";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 const NewChatmodal = ({ onClose }) => {
   const [users, setUsers] = useState([]);
+  const {user} = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await api.get("/users");
-        console.log(response.data);
-        setUsers(response.data);
+        const filteredUsers = response.data.filter(u=>u.id !== user.id);
+        setUsers(filteredUsers);
       } catch (error) {
         console.log(error);
       }
     };
     fetchUsers();
   }, []);
+  const createConversation = async (participantId)=>{
+    try {
+      const response = await api.post('/conversations',{participants:[participantId]});
+      const conversationId = response.data.id;
+      navigate(`/chat/${conversationId}`)
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      toast.error("Failed to create conversation")
+    }
+  }
   return (
     <div className="absolute inset-0 bg-white backdrop-blur-xl flex justify-center items-center z-50">
       <div className="w-full h-full px-4">
@@ -43,6 +58,7 @@ const NewChatmodal = ({ onClose }) => {
         <div className="mt-4 ">
           {users.map((user) => (
             <div
+              onClick={()=>createConversation(user.id)}
               key={user.id}
               className="px-2 py-3 rounded-xl cursor-pointer hover:bg-emerald-100 transition-colors duration-300 flex items-center  justify-between"
             >

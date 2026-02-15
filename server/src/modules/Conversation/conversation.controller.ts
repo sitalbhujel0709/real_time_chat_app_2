@@ -12,6 +12,7 @@ export class conversationController {
       const conversation = await ConversationService.createConversation({participants,name});
       res.status(201).json(conversation);
     } catch (error) {
+      console.error(error);
       res.status(500).json({message: error instanceof Error ? error.message : 'Internal Server Error'})
     }
   }
@@ -20,7 +21,7 @@ export class conversationController {
     try {
       const conversations= await ConversationService.getUserConversations(Number(userId));
       if(conversations.length === 0){
-        return res.status(404).json({message:'No Conversations found '})
+        return res.status(404).json({message:'No Conversations found'})
       }
       res.status(200).json(conversations);
     } catch (error) {
