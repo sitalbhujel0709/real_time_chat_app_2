@@ -25,6 +25,7 @@ export class UserController {
       })
       res.status(200).json({ ...userWithoutPassword, accessToken });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' });
     }
   }

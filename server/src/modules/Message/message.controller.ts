@@ -24,6 +24,7 @@ export class MessageController {
       })
       res.status(201).json(message);
     } catch (error) {
+      console.error(error)
       res.status(500).json({message: error instanceof Error ? error.message : 'Internal Server Error'})
     }
   }

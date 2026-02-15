@@ -39,12 +39,26 @@ io.use((socket,next)=>{
     next(new Error('Authentication error: Invalid token'));
   }
 })
-
+const connectedUsers : Record<string,string> = {};
 
 io.on('connection',(socket)=>{
-  console.log(`New client connected: ${socket.id}, user ID: ${socket.data.user}`);
+  const userId = socket.data.user;
+  console.log(`New client connected: ${socket.id}, user ID: ${userId}`);
+  connectedUsers[userId] = socket.id;
 
+  //join conversation room
+  socket.on('joinConversation',(conversationId:string)=>{
+    socket.join(`conversation_${conversationId}`);
+    console.log(`user ${userId} joined conversation room: conversation_${conversationId}`)
+  })
+  socket.on('newMessage',(message)=>{
+    const conversationRoom = `conversation_${String(message.conversationId)}`;
+    io.to(conversationRoom).emit('messageReceived',message)
+  })
+  io.emit('connectedUsers',Object.keys(connectedUsers))
   socket.on('disconnect',()=>{
     console.log(`Client disconnected: ${socket.id}, user ID: ${socket.data.user}`)
+    delete connectedUsers[userId];
+    io.emit('connectedUsers',Object.keys(connectedUsers))
   })
 })

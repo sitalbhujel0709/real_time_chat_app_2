@@ -6,68 +6,19 @@ const FriendList = () => {
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   // Mock friend data with real-time status
-  const friends = [
-    {
-      id: 1,
-      name: 'Alex Rivera',
-      status: 'online',
-      lastMessage: 'Hey! Did you see the game last night?',
-      timestamp: '2m ago',
-      unread: 3,
-      avatar: 'AR',
-      typing: false
-    },
-    {
-      id: 2,
-      name: 'Sam Chen',
-      status: 'online',
-      lastMessage: 'Thanks for your help earlier 🙏',
-      timestamp: '15m ago',
-      unread: 0,
-      avatar: 'SC',
-      typing: true
-    },
-    {
-      id: 3,
-      name: 'Jordan Blake',
-      status: 'away',
-      lastMessage: 'Let\'s catch up this weekend',
-      timestamp: '1h ago',
-      unread: 1,
-      avatar: 'JB',
-      typing: false
-    },
-    {
-      id: 4,
-      name: 'Taylor Morgan',
-      status: 'offline',
-      lastMessage: 'Perfect, see you then!',
-      timestamp: '3h ago',
-      unread: 0,
-      avatar: 'TM',
-      typing: false
-    },
-    {
-      id: 5,
-      name: 'Casey Kim',
-      status: 'online',
-      lastMessage: 'Can you send me that file?',
-      timestamp: '5h ago',
-      unread: 0,
-      avatar: 'CK',
-      typing: false
-    },
-    {
-      id: 6,
-      name: 'Morgan Lee',
-      status: 'offline',
-      lastMessage: 'Sounds good!',
-      timestamp: 'Yesterday',
-      unread: 0,
-      avatar: 'ML',
-      typing: false
-    }
-  ];
+  // const friends = [
+  //   {
+  //     id: 1,
+  //     name: 'Alex Rivera',
+  //     status: 'online',
+  //     lastMessage: 'Hey! Did you see the game last night?',
+  //     timestamp: '2m ago',
+  //     unread: 3,
+  //     avatar: 'AR',
+  //     typing: false
+  //   },
+    
+  // ];
 
   const filteredFriends = friends.filter(friend =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
