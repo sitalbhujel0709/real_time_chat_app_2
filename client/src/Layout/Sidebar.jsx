@@ -35,9 +35,9 @@ const Sidebar = () => {
           <span className="flex justify-center items-center p-2 text-emerald-600 hover:text-emerald-700 hover:-font-semibold transition-colors duration-300 cursor-pointer">
             <Settings className="w-5 h-5" />
           </span>
-          <span className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 cursor-pointer text-2xl capitalize font-semibold">
+          <Link to={'/profile'} className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 cursor-pointer text-2xl capitalize font-semibold">
             {user?.username[0]}
-          </span>
+          </Link>
         </div>
       </div>
     </div>

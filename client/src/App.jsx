@@ -6,6 +6,7 @@ import ProtectedRoute from './context/ProtectedRoute'
 import SignUp from './Layout/SignUpPage'
 import ChatWindow from './Layout/ChatWindow'
 import NewChat from './Layout/NewChat'
+import Profilepage from './Layout/Profilepage'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route index element={<NewChat/>}/>
         <Route path=':conversationId' element={<ChatWindow/>}/>
       </Route>
+      <Route path="/profile" element={<ProtectedRoute><Profilepage/></ProtectedRoute>}/>
     </Routes>
   )
 }
