@@ -2,6 +2,7 @@ import app from "../app";
 import {createServer} from 'node:http'
 import {Server} from 'socket.io'
 import { verifyToken } from "../utils/jwt";
+import { prisma } from "../config/prisma";
 
 export const httpServer = createServer(app);
 
@@ -54,6 +55,25 @@ io.on('connection',(socket)=>{
   socket.on('newMessage',(message)=>{
     const conversationRoom = `conversation_${String(message.conversationId)}`;
     io.to(conversationRoom).emit('messageReceived',message)
+  })
+  socket.on('messageSeen',async (data:{conversationId:number,userId:number})=>{
+    const {conversationId,userId} = data;
+    const conversationRoom = `conversation_${conversationId}`;
+
+    await prisma.message.updateMany({
+      where:{
+        conversationId:Number(conversationId),
+        senderId:{
+          not:userId
+        }
+      },
+      data:{
+        seen:true
+      }
+    })
+    console.log(`user has seen message`)
+
+    io.to(conversationRoom).emit('markAsSeen',{conversationId,userId})
   })
   io.emit('connectedUsers',Object.keys(connectedUsers))
   socket.on('disconnect',()=>{

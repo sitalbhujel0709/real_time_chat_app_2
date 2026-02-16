@@ -12,6 +12,9 @@ export class MessageService {
     const messages = await prisma.message.findMany({
       where:{
         conversationId
+      },
+      orderBy:{
+        createdAt:'asc'
       }
     })
     return messages;
