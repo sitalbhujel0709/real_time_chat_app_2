@@ -75,12 +75,12 @@ const Leftbar = ({ conversations }) => {
       {/* chat list */}
       <div className="space-y-1 mt-4 overflow-y-auto flex-1">
         {conversations.map(
-          ({ id, name, lastMessage, lastMessagetime, Participant }) => {
+          ({ id, name, messages, Participant }) => {
             return (
               <div
                 key={id}
                 className={
-                  "h-16 p-2 flex items-center rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
+                  "h-16 p-2 flex items-end-safe rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
                   (activeChat === id ? " bg-gray-200" : "")
                 }
                 onClick={() => OpenConversation(id)}
@@ -101,12 +101,15 @@ const Leftbar = ({ conversations }) => {
                       : Participant.find((p) => p.user.id !== user.id)?.user
                           .name}
                   </span>
-                  <span className="ml-4 text-sm text-gray-500 ">
-                    {lastMessage}
+                  <span className={`ml-4 text-sm text-gray-500 ${(messages[0]?.senderId !== user.id && !messages[0]?.seen)? "font-semibold text-sky-400":"font-normal"}`}>
+                    {messages[0]?.content}
                   </span>
                 </div>
-                <span className="ml-4 text-sm text-gray-500">
-                  {lastMessagetime}
+                <span className="ml-auto text-sm text-gray-500">
+                  {new Date(messages[0]?.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                 </span>
               </div>
             );

@@ -11,6 +11,7 @@ const PageLayout = () => {
       try {
         const response = await api.get("/conversations");
         setConversations(response.data);
+        console.log(response.data)
       } catch (error) {
         console.log(error);
         setConversations([]);

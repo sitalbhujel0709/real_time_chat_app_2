@@ -6,6 +6,8 @@ type CreateConversationDTO = {
   name?: string;
 }
 
+
+
 export class ConversationService {
   static async createConversation({ participants, name }: CreateConversationDTO): Promise<Conversation> {
     const ExistingConversation = await prisma.conversation.findFirst({
@@ -50,14 +52,25 @@ export class ConversationService {
           },
         }
       },
+      
       include:{
         Participant:{
           include:{
             user:true
           }
+        },
+        messages:{
+          orderBy:{
+            createdAt:'desc'
+          },
+          take:1
         }
       }
     })
-    return conversations;
+    return conversations.sort((a, b) => {
+    const aTime = a.messages[0]?.createdAt?.getTime() ?? 0;
+    const bTime = b.messages[0]?.createdAt?.getTime() ?? 0;
+    return bTime - aTime;
+  });
   }
 }
