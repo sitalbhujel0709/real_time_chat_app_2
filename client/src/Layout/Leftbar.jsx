@@ -10,14 +10,14 @@ const Leftbar = ({ conversations }) => {
   const [activeChat, setActiveChat] = useState();
   const [newChatModalOpen, setNewChatModalOpen] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const { user,logout } = useAuth();
+  const { user, logout } = useAuth();
   const { socket, isConnected } = useSocket();
   const navigate = useNavigate();
 
   const options = [
-    {label:'New Groupchat',func:()=>{}},
-    {label:'Settings',func:()=>{}},
-    {label:'Logout',func:logout}
+    { label: "New Groupchat", func: () => {} },
+    { label: "Settings", func: () => {} },
+    { label: "Logout", func: logout },
   ];
   useEffect(() => {
     if (!socket) return;
@@ -74,47 +74,50 @@ const Leftbar = ({ conversations }) => {
       </div>
       {/* chat list */}
       <div className="space-y-1 mt-4 overflow-y-auto flex-1">
-        {conversations.map(
-          ({ id, name, messages, Participant }) => {
-            return (
-              <div
-                key={id}
-                className={
-                  "h-16 p-2 flex items-end-safe rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
-                  (activeChat === id ? " bg-gray-200" : "")
-                }
-                onClick={() => OpenConversation(id)}
-              >
-                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex justify-center items-center font-semibold relative cursor-pointer">
-                  {Participant.find((p) => p.user.id !== user.id)
-                    ?.user.name.split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                  <span
-                    className={`ml-auto absolute ${onlineUsers.includes(String(Participant.find((p) => p.user.id !== user.id)?.user.id)) ? "bg-green-500" : "bg-gray-400"} w-3 h-3 rounded-full self-start border border-gray-300 bottom-0 right-0`}
-                  ></span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="ml-4 text-md font-semibold text-emerald-600 cursor-pointer">
-                    {name
-                      ? name
-                      : Participant.find((p) => p.user.id !== user.id)?.user
-                          .name}
-                  </span>
-                  <span className={`ml-4 text-sm text-gray-500 ${(messages[0]?.senderId !== user.id && !messages[0]?.seen)? "font-semibold text-sky-400":"font-normal"}`}>
-                    {messages[0]?.content}
-                  </span>
-                </div>
-                <span className="ml-auto text-sm text-gray-500">
-                  {new Date(messages[0]?.createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+        {conversations.map(({ id, name, messages, Participant }) => {
+          return (
+            <div
+              key={id}
+              className={
+                "h-16 p-2 flex items-end-safe rounded-xl hover:bg-gray-200 cursor-pointer transition-colors duration-300" +
+                (activeChat === id ? " bg-gray-200" : "")
+              }
+              onClick={() => OpenConversation(id)}
+            >
+              <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex justify-center items-center font-semibold relative cursor-pointer">
+                {Participant.find((p) => p.user.id !== user.id)
+                  ?.user.name.split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+                <span
+                  className={`ml-auto absolute ${onlineUsers.includes(String(Participant.find((p) => p.user.id !== user.id)?.user.id)) ? "bg-green-500" : "bg-gray-400"} w-3 h-3 rounded-full self-start border border-gray-300 bottom-0 right-0`}
+                ></span>
+              </div>
+              <div className="flex flex-col">
+                <span className="ml-4 text-md font-semibold text-emerald-600 cursor-pointer">
+                  {name
+                    ? name
+                    : Participant.find((p) => p.user.id !== user.id)?.user.name}
+                </span>
+                <span className={`ml-4 text-sm text-gray-500 `}>
+                  {messages[0]?.content}
                 </span>
               </div>
-            );
-          },
-        )}
+              <div
+                className={`ml-auto text-sm  ${messages[0]?.senderId !== user.id && !messages[0]?.seen ? "font-semibold text-emerald-600" : "font-normal text-gray-500 "} `}
+              >
+                <p>
+                  {new Date(messages[0]?.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                {(messages[0]?.senderId !== user.id && !messages[0]?.seen) && <span className="w-4 h-4 inline-flex rounded-full bg-emerald-600 text-sm text-gray-200 items-center justify-center">1</span> }
+                <span></span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
