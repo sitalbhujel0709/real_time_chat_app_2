@@ -13,15 +13,15 @@ export class ConversationService {
     const ExistingConversation = await prisma.conversation.findFirst({
       where: {
         Participant: {
-          every: {
-            userId: {
-              in: participants
-            }
-          }
+          every: { userId: { in: participants } }
         }
+      },
+      include: {
+        Participant: true
       }
     })
-    if (ExistingConversation) {
+
+    if (ExistingConversation && ExistingConversation.Participant.length === participants.length) {
       return ExistingConversation
     }
     let isGroup = false;
@@ -52,25 +52,25 @@ export class ConversationService {
           },
         }
       },
-      
-      include:{
-        Participant:{
-          include:{
-            user:true
+
+      include: {
+        Participant: {
+          include: {
+            user: true
           }
         },
-        messages:{
-          orderBy:{
-            createdAt:'desc'
+        messages: {
+          orderBy: {
+            createdAt: 'desc'
           },
-          take:1
+          take: 1
         }
       }
     })
     return conversations.sort((a, b) => {
-    const aTime = a.messages[0]?.createdAt?.getTime() ?? 0;
-    const bTime = b.messages[0]?.createdAt?.getTime() ?? 0;
-    return bTime - aTime;
-  });
+      const aTime = a.messages[0]?.createdAt?.getTime() ?? 0;
+      const bTime = b.messages[0]?.createdAt?.getTime() ?? 0;
+      return bTime - aTime;
+    });
   }
 }

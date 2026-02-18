@@ -5,17 +5,19 @@ import NewChatmodal from "../components/NewChatmodal";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/socket";
+import NewGroupmodal from "../components/NewGroupmodal";
 
 const Leftbar = ({ conversations }) => {
   const [activeChat, setActiveChat] = useState();
   const [newChatModalOpen, setNewChatModalOpen] = useState(false);
+  const [newGroupModalOpen, setNewGroupModalOpen] = useState(false)
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { user, logout } = useAuth();
   const { socket, isConnected } = useSocket();
   const navigate = useNavigate();
 
   const options = [
-    { label: "New Groupchat", func: () => {} },
+    { label: "New Groupchat", func: () => setNewGroupModalOpen(true) },
     { label: "Settings", func: () => {} },
     { label: "Logout", func: logout },
   ];
@@ -56,6 +58,11 @@ const Leftbar = ({ conversations }) => {
                 }}
               />
             )}
+            {
+              !newChatModalOpen && newGroupModalOpen && (
+                <NewGroupmodal onClose={()=> setNewGroupModalOpen(false)}/>
+              )
+            }
             <Dropdown options={options} />
           </div>
         </header>
